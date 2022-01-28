@@ -1,7 +1,7 @@
 .. image:: https://img.shields.io/badge/tstn--002-lsst.io-brightgreen.svg
    :target: https://tstn-002.lsst.io
-.. image:: https://travis-ci.com/lsst-tstn/tstn-002.svg
-   :target: https://travis-ci.com/lsst-tstn/tstn-002
+.. image:: https://github.com/lsst-tstn/tstn-002/workflows/CI/badge.svg
+   :target: https://github.com/lsst-tstn/tstn-002/actions/
 
 ############################
 Software Deployment Strategy
@@ -10,11 +10,11 @@ Software Deployment Strategy
 TSTN-002
 ========
 
-This document describes the software deployment strategy to be implemented by T\&S. 
+This document describes the software deployment strategy to be implemented by T\&S.
 It contains a definition and list of the software products that will be delivered by T\&S and the
-path from development and maintenance to deployment. Software provided by external 
+path from development and maintenance to deployment. Software provided by external
 vendors will be incorporated to the process in due time. It is also recommended that
-software provided by other subsystems follows the procedures established by this document. 
+software provided by other subsystems follows the procedures established by this document.
 
 Links
 =====
