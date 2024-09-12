@@ -28,11 +28,9 @@ Tiago Ribeiro
 % \setDocCurator{The Curator of this Document}
 
 \setDocAbstract{%
-This document describes the software deployment strategy to be implemented by T\&S. 
-It contains a definition and list of the software products that will be delivered by T\&S and the
-path from development and maintenance to deployment. Software provided by external 
-vendors will be incorporated to the process in due time. It is also recommended that
-software provided by other subsystems follows the procedures established by this document. 
+This documents describes a proposal to use semantic version on Telescope \& Site
+software as a way to map the system version rather than package by package in 
+an attempt to ameliorate build and deployment activities. 
 }
 
 % Change history defined here.
@@ -54,15 +52,81 @@ software provided by other subsystems follows the procedures established by this
 % ADD CONTENT HERE
 % You can also use the \input command to include several content files.
 
-\appendix
+Recently, semantic version has been used on a package by package basis on T\&S software 
+with great success. It made it easier for developers to identify package versions that can be
+deployed together and have decreased considerably the number of catastrophic deployments;
+when the system is deployed with the wrong version of a software that prevents operations entirely. 
+
+Nevertheless, with the increasing number of packages, continuous release of new versions of base 
+packages and with developers being able to deliver backward and forward compatible code, the task 
+of building and deploying has become increasingly difficult. The lack of automated build and 
+deployment engines adds to the complexity of task usually requiring many hours of identifying the right
+packages to deploy for a specific time. Table~\ref{tab:package_version} lists the current running version 
+for some of the T\&S core packages.
+
+\begin{table}[htb]
+\caption{Example of current versions of some of the core packages from
+LSST T\&S}
+\begin{center}
+  \begin{tabular}{ l | c }
+Package & current version \\
+    \hline
+ts\_xml & 4.2.0 \\
+ts\_sal & 3.10.0 \\
+ts\_salobj & 4.5.0 \\
+ts\_idl & 0.3.0 \\
+ts\_scriptqueue & 2.3.0 \\    
+    \hline
+  \end{tabular}
+\end{center}
+\label{tab:package_version}
+\end{table}%
+
+In order to mitigate that issue we propose to use a uniform system versioning scheme, that is, apply 
+semantic versioning on the system rather then on individual packages. 
+
+The idea is to use Major and Minor version numbers for the system, leaving the Patch version 
+number as a float. It would start by introducing a new version for the system with a number that 
+supersedes all the current (and upcoming) versions of all the packages, e.g. 6.0.0, so it is possible 
+to filter out the previous versioning schema. 
+
+To build the system from now on it would only be required to specify a major and minor version. An 
+automated system can then build a new version of the system by looking at the latest patch release 
+of all the packages with the same major/minor version numbers. 
+
+For instance, ts\_xml receives a patch release to fix a typo on a topic description (e.g. 6.0.1), the 
+system would be build with a combination of all unchanged 6.0.0 packages and ts\_xml 6.0.1.  
+
+If any package on the system receives a major or minor version increase (say from 6.0.1 to 6.1.0), an 
+automated system can try to build all the packages with the new version number. Those packages 
+that passes, are automatically tagged with the new version and those that fail will have to be 
+updated manually by developers. In any case, at the end of the build process it would be possible 
+to know whether the entire system (or a subset of required components) can be redeployed with 
+the new version or not. 
+
+Note that, in this case, some (or several) packages will have different versions pointing to the
+same version. For instance, if ts\_xml is updated from 6.1.0 to 6.1.0, ts\_sal, ts\_salobj and several 
+other packages will receive the same tag without any code change. Given that ts\_xml 
+receives frequent non-backward compatible updates, this will likely increase the package
+minor (and probably major) version numbers considerably. 
+
+It is possible to choose whether major and minor versions can only be incremented by core 
+packages, e.g. ts\_xml, ts\_sal and ts\_salobj or if developers can also change that on 
+an upstream package. For instance, if ts\_scriptqueue receives a significant upgrade that could
+spun up a minor (or even major) release, we could allow it to increment the system version. 
+At the same time, it is hard to realize such an upgrade would happen without changes being 
+made to any of the core packages. 
+
+% \newpage
+% \appendix
 % Include all the relevant bib files.
 % https://lsst-texmf.lsst.io/lsstdoc.html#bibliographies
-\section{References} \label{sec:bib}
-\bibliography{local,lsst,lsst-dm,refs_ads,refs,books}
+% \section{References} \label{sec:bib}
+% \bibliography{local,lsst,lsst-dm,refs_ads,refs,books}
 
 % Make sure lsst-texmf/bin/generateAcronyms.py is in your path
-\section{Acronyms} \label{sec:acronyms}
-\input{acronyms.tex}
+% \section{Acronyms} \label{sec:acronyms}
+% \input{acronyms.tex}
 % If you want glossary uncomment below -- comment out the two lines above
 %\printglossaries
 
